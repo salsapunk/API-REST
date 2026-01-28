@@ -1,0 +1,6 @@
+crud ->
+	create
+	read
+	update
+	 -done (false -> true)
+	delete
