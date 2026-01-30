@@ -15,7 +15,7 @@ import (
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response.Response{
-		Message: "API is healthy",
+		Message: "pong",
 		Status:  200,
 	})
 }
@@ -31,7 +31,10 @@ func main() {
 	NewTaskRepository := repository.NewTaskRepository(dbConnection)
 	NewTaskHandler := handlers.NewTaskHandler(&NewTaskRepository)
 
+	mux.HandleFunc("/ping", healthHandler)
 	mux.HandleFunc("/GET/tasks", NewTaskHandler.ListAll)
+	mux.HandleFunc("/POST/task", NewTaskHandler.Create)
+	// mux.HandleFunc("/PUT/task/:id", NewTaskHandler.Edit)
 
 	http.Handle("/", mux)
 

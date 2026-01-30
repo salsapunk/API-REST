@@ -18,6 +18,15 @@ func NewTaskHandler(repo *repository.TaskRepository) TaskHandler {
 	}
 }
 
+func (th *TaskHandler) ListAll(w http.ResponseWriter, r *http.Request) {
+	tasks, err := th.Repo.ListAll()
+	if err != nil {
+		http.Error(w, "DB error", http.StatusInternalServerError)
+	}
+
+	json.NewEncoder(w).Encode(tasks)
+}
+
 func (th *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var task models.Task
 
@@ -35,11 +44,5 @@ func (th *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(task)
 }
 
-func (th *TaskHandler) ListAll(w http.ResponseWriter, r *http.Request) {
-	tasks, err := th.Repo.ListAll()
-	if err != nil {
-		http.Error(w, "DB error", http.StatusInternalServerError)
-	}
-
-	json.NewEncoder(w).Encode(tasks)
+func (th *TaskHandler) Edit(w http.ResponseWriter, r *http.Request) {
 }
