@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/salsapunk/API-REST/models"
 	"github.com/salsapunk/API-REST/repository"
@@ -25,6 +27,21 @@ func (th *TaskHandler) ListAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(tasks)
+}
+
+func (th *TaskHandler) ListByID(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/GET/task/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+	}
+
+	task, err := th.Repo.ListByID(id)
+	if err != nil {
+		http.Error(w, "DB error", http.StatusInternalServerError)
+	}
+
+	json.NewEncoder(w).Encode(task)
 }
 
 func (th *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
