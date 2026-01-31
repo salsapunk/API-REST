@@ -54,7 +54,7 @@ func (tr *TaskRepository) ListAll() ([]models.Task, error) {
 }
 
 func (tr *TaskRepository) ListByID(id int) (*models.Task, error) {
-	row, err := tr.connection.Prepare(models.ShowTaskBI)
+	query, err := tr.connection.Prepare(models.ShowTaskBI)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
@@ -62,7 +62,7 @@ func (tr *TaskRepository) ListByID(id int) (*models.Task, error) {
 
 	var taskObj models.Task
 
-	err = row.QueryRow(id).Scan(&taskObj.ID,
+	err = query.QueryRow(id).Scan(&taskObj.ID,
 		&taskObj.Title,
 		&taskObj.Description,
 		&taskObj.Done,
@@ -77,7 +77,7 @@ func (tr *TaskRepository) ListByID(id int) (*models.Task, error) {
 		return nil, err
 	}
 
-	err = row.Close()
+	err = query.Close()
 	if err != nil {
 		fmt.Print(err)
 		return nil, err
@@ -115,6 +115,18 @@ func (tr *TaskRepository) Create(task *models.Task) (int, error) {
 	return id, nil
 }
 
-func (tr *TaskRepository) Edit(id int, task *models.Task) error {
+func (tr *TaskRepository) Edit(id int) error {
+	query, err := tr.connection.Prepare(models.EditTask)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	err = query.QueryRow(id).Err()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
 	return nil
 }

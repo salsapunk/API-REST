@@ -62,4 +62,15 @@ func (th *TaskHandler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (th *TaskHandler) Edit(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/PUT/task/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	err = th.Repo.Edit(id)
+	if err != nil {
+		http.Error(w, "DB error", http.StatusInternalServerError)
+	}
 }

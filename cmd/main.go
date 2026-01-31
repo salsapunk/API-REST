@@ -34,11 +34,8 @@ func main() {
 	mux.HandleFunc("/ping", healthHandler)
 	mux.HandleFunc("/GET/tasks", NewTaskHandler.ListAll)
 	mux.HandleFunc("/POST/task", NewTaskHandler.Create)
-
-	// 404 page not found
-	mux.HandleFunc("/GET/task/:id", NewTaskHandler.ListByID)
-
-	// mux.HandleFunc("/PUT/task/:id", NewTaskHandler.Edit)
+	mux.HandleFunc("/GET/task/{id}", NewTaskHandler.ListByID)
+	mux.HandleFunc("/PUT/task/{id}", NewTaskHandler.Edit)
 
 	http.Handle("/", mux)
 
